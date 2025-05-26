@@ -40,10 +40,15 @@ const Navbar = () => {
                     <ul className="hidden lg:flex items-center gap-6 text-[15px] font-medium text-gray-700">
                         {navLinks.map((link, idx) =>
                             link.dropdown ? (
-                                <li key={idx} className="group relative">
+                                <motion.li
+                                    key={idx}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="group relative"
+                                >
                                     <div className="flex items-center cursor-pointer px-4 py-3 hover:text-blue-600 transition select-none">
                                         <span>{link.name}</span>
-                                        {/* Dropdown arrow */}
                                         <svg
                                             className="ml-1 w-4 h-4 text-gray-500 group-hover:text-blue-600 transition"
                                             fill="none"
@@ -69,9 +74,14 @@ const Navbar = () => {
                                             </li>
                                         ))}
                                     </ul>
-                                </li>
+                                </motion.li>
                             ) : (
-                                <li key={idx}>
+                                <motion.li
+                                    key={idx}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                >
                                     <NavLink
                                         to={link.to}
                                         className={({ isActive }) =>
@@ -80,15 +90,18 @@ const Navbar = () => {
                                     >
                                         {link.name}
                                     </NavLink>
-                                </li>
+                                </motion.li>
                             )
                         )}
-                        <li>
+                        <motion.li
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: navLinks.length * 0.1 }}
+                        >
                             <NavLink
                                 to="/login"
                                 className={({ isActive }) =>
-                                    `relative inline-block overflow-hidden px-6 py-2 rounded-md font-semibold transition-colors duration-500 group
-      ${isActive ? 'bg-blue-600 text-white' : 'bg-black text-white'
+                                    `relative inline-block overflow-hidden px-6 py-2 rounded-md font-semibold transition-colors duration-500 group ${isActive ? 'bg-blue-600 text-white' : 'bg-black text-white'
                                     }`
                                 }
                             >
@@ -98,9 +111,9 @@ const Navbar = () => {
                                 ></span>
                                 <span className="relative z-10">Login</span>
                             </NavLink>
-                        </li>
-
+                        </motion.li>
                     </ul>
+
 
                     {/* Mobile Menu Button */}
                     <div className="lg:hidden flex items-center">
