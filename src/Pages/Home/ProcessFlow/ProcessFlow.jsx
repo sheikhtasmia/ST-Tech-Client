@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import './ProcessFlow.css'
 import {
   FaCode,
   FaSearch,
@@ -62,19 +63,19 @@ const steps = [
   },
 ];
 
-
 const ProcessFlow = () => {
   return (
     <div className="relative bg-white text-gray-900 py-24 px-6 md:px-20 overflow-hidden">
-      {/* Dot Dot Background using Image */}
+      {/* Background Dots */}
       <div className="absolute inset-0 bg-[url('https://i.ibb.co/0jRkBG51/Screenshot-2025-05-26-160147.png')] bg-repeat opacity-30 z-0" />
 
-      {/* Soft Rings for Decoration */}
+      {/* Decorative Rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <div className="animate-ping w-[900px] h-[900px] rounded-full border border-gray-300/20 absolute" />
         <div className="animate-pulse w-[600px] h-[600px] rounded-full border border-gray-300/30 absolute" />
       </div>
 
+      {/* Steps */}
       <div className="relative z-10 flex flex-col items-center gap-24">
         {steps.map((step, index) => {
           const ref = useRef(null);
@@ -102,7 +103,7 @@ const ProcessFlow = () => {
                 />
               )}
 
-              {/* Step Circle */}
+              {/* Step Number Circle */}
               <div
                 className={`absolute -top-6 md:top-0 md:translate-y-[-50%] ${
                   index % 2 === 0 ? 'left-0 md:left-16' : 'right-0 md:right-16'
@@ -111,9 +112,9 @@ const ProcessFlow = () => {
                 {step.id}
               </div>
 
-              {/* Card */}
+              {/* 3D Card */}
               <div
-                className={`bg-white rounded-xl p-6 shadow-xl max-w-lg w-full border border-gray-200 transition-transform hover:scale-[1.02] duration-300 ${
+                className={`group bg-white rounded-xl p-6 shadow-xl max-w-lg w-full border border-gray-200 transition-transform duration-500 perspective-3d hover-card ${
                   index % 2 === 0 ? 'md:ml-20' : 'md:mr-20'
                 }`}
               >

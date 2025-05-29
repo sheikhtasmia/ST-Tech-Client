@@ -1,0 +1,8 @@
+/* Custom class for 3D hover */
+.hover-card {
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+.hover-card:hover {
+  transform: perspective(500px) rotateY(15deg);
+}

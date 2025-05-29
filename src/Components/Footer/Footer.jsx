@@ -22,11 +22,10 @@ const Footer = () => {
                     <div className="flex flex-col gap-3 text-sm text-gray-700">
                         {[
                             { name: 'Home', icon: '🏠', to: '/' },
-                            { name: 'About Us', icon: '👤', to: '/about' },
+                            { name: 'About', icon: '👤', to: '/about' },
                             { name: 'Services', icon: '🛠️', to: '/services' },
-                            { name: 'Careers', icon: '🎯', to: '/careers' },
+                            { name: 'Portfolio', icon: '🎯', to: '/portfolio' },
                             { name: 'Contact', icon: '📞', to: '/contact' },
-                            { name: 'Blog', icon: '📝', to: '/blog' },
                         ].map((item, i) => (
                             <Link
                                 key={i}
@@ -110,7 +109,7 @@ const Footer = () => {
             {/* Footer Bottom */}
             <div className="border-t border-gray-200 mt-10 pt-4 text-xs text-gray-500 text-center flex flex-col md:flex-row justify-between items-center px-4 max-w-7xl mx-auto">
                 <p className="mb-2 md:mb-0">
-                    © 2025 <span className="font-semibold text-gray-800">ST Tech Work</span> | Design By <span className="font-semibold text-gray-800">Egens Lab</span>
+                    © 2025 <span className="font-semibold text-gray-800">ST Tech Work</span> | Developed By <span className="font-semibold text-gray-800">ST Tech works team member</span>
                 </p>
                 <div className="flex gap-4">
                     <a href="#" className="hover:underline hover:text-blue-600 transition">Support Policy</a>

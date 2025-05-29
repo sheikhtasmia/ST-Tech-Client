@@ -46,7 +46,7 @@ const Banner = () => {
             Crafting Powerful Digital Solutions for Visionary Brands
           </h1>
 
-          <div className="text-xl md:text-2xl font-semibold text-blue-700 pt-2">
+          <div className="text-xl md:text-5xl font-semibold text-blue-700 pt-2">
             <TypeAnimation
               sequence={[
                 'Web Design & Development', 2000,

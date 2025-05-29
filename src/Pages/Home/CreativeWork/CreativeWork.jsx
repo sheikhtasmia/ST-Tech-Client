@@ -74,7 +74,7 @@ const CreativeWork = () => {
               <div>
                 <p className="text-xl font-semibold text-gray-900">
                   {inView ? (
-                    <CountUp end={stat.count} duration={2} />
+                    <CountUp end={stat.count} duration={20} />
                   ) : (
                     '0'
                   )}
