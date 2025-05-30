@@ -31,7 +31,11 @@ const Navbar = () => {
                 { name: 'Web Development', to: '/services/web-development' },
                 { name: 'Digital & Organic Marketing', to: '/services/digital-marketing' },
                 { name: 'SEO', to: '/services/seo' },
-                { name: 'Data Analysis', to: '/services/data-analysis' }
+                { name: 'Data Analysis', to: '/services/data-analysis' },
+                { name: 'Graphics Design ', to: '/services/GraphicsDesign' },
+                { name: 'Content Writing ', to: '/services/ContentWriting' },
+                { name: 'HR & Recruitment  ', to: '/services/Recruitment' },
+                { name: 'MSOffice Services  ', to: '/services/MSOfficeServices' },
             ]
         },
         { name: 'Portfolio', to: '/portfolio' },
@@ -63,7 +67,7 @@ const Navbar = () => {
                                         {link.dropdown.map((item, i) => (
                                             <li key={i}>
                                                 <NavLink to={item.to} className={({ isActive }) =>
-                                                    "px-4 py-5 hover:bg-blue-300 block transition " + (isActive ? activeClass : "")}>
+                                                    "px-4 py-3 hover:bg-blue-300 block transition " + (isActive ? activeClass : "")}>
                                                     {item.name}
                                                 </NavLink>
                                             </li>

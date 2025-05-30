@@ -5,6 +5,14 @@ import Mainlayout from "../Layout/Mainlayout";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import Registration from "../Pages/Registration/Registration";
+import WebDevelopment from "../Pages/Services/WebDevelopment/WebDevelopment";
+import DigitalMarketing from "../Pages/Services/DigitalMarketing/DigitalMarketing";
+import SEO from "../Pages/Services/SEO/SEO";
+import DataAnlysis from "../Pages/Services/DataAnlysis/DataAnlysis";
+import GraphicsDesign from "../Pages/Services/GraphicsDesign/GraphicsDesign";
+import ContentWriting from "../Pages/Services/ContentWriting/ContentWriting";
+import HRRecruitment from "../Pages/Services/HRRecruitment/HRRecruitment";
+import MSOfficeServices from "../Pages/Services/MSOfficeServices/MSOfficeServices";
 
 const router = createBrowserRouter([
     {
@@ -14,6 +22,47 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <Home></Home>
+            },
+
+            {
+                path:'/services/web-development',
+                element:<WebDevelopment></WebDevelopment>
+            },
+
+            {
+                path:'/services/digital-marketing',
+                element:<DigitalMarketing></DigitalMarketing>
+            },
+
+
+            {
+                path:'/services/seo',
+                element:<SEO></SEO>
+            },
+
+            {
+                path:'/services/data-analysis',
+                element:<DataAnlysis></DataAnlysis>
+            },
+
+            {
+                path:'/services/GraphicsDesign',
+                element:<GraphicsDesign></GraphicsDesign>
+            },
+
+            {
+                path:'/services/ContentWriting',
+                element:<ContentWriting></ContentWriting>
+            },
+
+            {
+                path:'/services/Recruitment',
+                element:<HRRecruitment></HRRecruitment>
+            },
+
+            {
+                path:'/services/MSOfficeServices',
+                element:<MSOfficeServices></MSOfficeServices>
             },
 
             {
