@@ -7,6 +7,7 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     signOut,
+    updateProfile 
 } from "firebase/auth";
 import { app } from "../firebase/firebase.config";
 
@@ -33,15 +34,21 @@ const AuthProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
-    const googleSignIn = () =>{
+    const googleSignIn = () => {
         setLoading(true);
-        return signInWithPopup(auth,googleProvider);
+        return signInWithPopup(auth, googleProvider);
     }
 
     // Sign out the current user
     const logOut = () => {
         setLoading(true);
         return signOut(auth);
+    };
+
+    const updateUserProfile = (profile) => {
+        if (!auth.currentUser) return Promise.reject("No user is logged in");
+        setLoading(true);
+        return updateProfile(auth.currentUser, profile).finally(() => setLoading(false));
     };
 
     // Watch for auth state changes
@@ -64,6 +71,7 @@ const AuthProvider = ({ children }) => {
         signIn,
         googleSignIn,
         logOut,
+        updateUserProfile
     };
 
     // Provide the auth context

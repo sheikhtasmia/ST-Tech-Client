@@ -11,7 +11,7 @@ const Banner = () => {
       {/* Video Modal */}
       {showVideo && (
         <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center px-4">
-          <div className="relative w-full max-w-3xl">
+          <div className="relative w-full max-w-4xl">
             {/* Close Button */}
             <button
               onClick={() => setShowVideo(false)}
@@ -30,7 +30,7 @@ const Banner = () => {
       )}
 
       {/* Banner Section */}
-      <section className="bg-gradient-to-br from-white via-blue-50 to-white py-20 px-6 md:px-24 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden">
+      <section className="max-w-full bg-gradient-to-br from-white via-blue-50 to-white py-20 px-6 md:px-10 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden">
         {/* Left Content */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -42,11 +42,11 @@ const Banner = () => {
             Empowering Innovation 🚀
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
-            Crafting Powerful Digital Solutions for Visionary Brands
+          <h1 className="text-xl md:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight">
+            Ready to Grow Your Business.?
           </h1>
 
-          <div className="text-xl md:text-5xl font-semibold text-blue-700 pt-2">
+          <div className="text-sm md:text-2xl font-semibold text-blue-700 pt-2">
             <TypeAnimation
               sequence={[
                 'Web Design & Development', 2000,
@@ -63,33 +63,46 @@ const Banner = () => {
             />
           </div>
 
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-xs md:text-lg text-gray-600 leading-relaxed">
             As a creative tech agency, we blend design, strategy, and code to help forward-thinking brands thrive in the digital era. Your success is our mission.
           </p>
 
-          <div className="pt-6">
+          <div className="pt-3">
             <button
               onClick={() => setShowVideo(true)}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-xl"
+              className="bg-blue-600 max-sm:text-xs text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-xl"
             >
               Let’s Build Something Great
             </button>
           </div>
         </motion.div>
 
-        {/* Right Image */}
+        {/* Right Image with Continuous Up-Down Animation (No Slide-in) */}
         <motion.div
-          initial={{ opacity: 0, x: 80 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.2 }}
-          className="md:w-1/2"
+          className="md:w-1/3"
         >
-          <img
-            src="https://i.ibb.co/1JLBFGvj/494634935-122120625842804194-8825482722617541848-n.jpg"
-            alt="Creative team brainstorming"
-            className="rounded-xl shadow-xl w-full object-cover"
-          />
+          <motion.div
+            animate={{ y: [0, -10, 0, 10, 0] }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut",
+            }}
+          >
+            <img
+              src="https://i.ibb.co/1JLBFGvj/494634935-122120625842804194-8825482722617541848-n.jpg"
+              alt="Creative team brainstorming"
+              className="rounded-xl shadow-xl w-full object-cover"
+            />
+          </motion.div>
         </motion.div>
+
+
+
       </section>
     </>
   );

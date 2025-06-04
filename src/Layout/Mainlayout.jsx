@@ -9,13 +9,13 @@ const Mainlayout = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2000);
+        }, 1000);
         return () => clearTimeout(timer);
     }, []);
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-base-200 text-black gap-6">
+            <div className=" flex flex-col items-center justify-center min-h-screen bg-base-200 text-black gap-6">
                 {/* Logo */}
                 <img
                     src="https://i.ibb.co/HDPgsNx3/download-13.png"
@@ -31,7 +31,7 @@ const Mainlayout = () => {
     }
 
     return (
-        <div className="font-inter">
+        <div className="font-inter ">
             <Navbar />
             <Outlet />
             <Footer />

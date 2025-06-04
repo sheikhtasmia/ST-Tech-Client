@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import './ProcessFlow.css'
+import { Link } from 'react-router-dom';
+import './ProcessFlow.css';
 import {
   FaCode,
   FaSearch,
@@ -18,54 +19,62 @@ const steps = [
     title: 'Web Design & Development',
     description: 'We craft responsive, fast, and user-centric websites and web applications tailored to your brand.',
     icon: <FaCode className="text-gray-800 text-2xl" />,
+    link: '/services/web-development',
   },
   {
     id: 2,
     title: 'SEO',
     description: 'Boost your online presence with expert SEO strategies that improve search rankings and drive traffic.',
     icon: <FaSearch className="text-gray-800 text-2xl" />,
+    link: '/services/seo',
   },
   {
     id: 3,
     title: 'Graphics Design',
     description: 'Designing visually compelling graphics and brand identities that make a lasting impact.',
     icon: <FaPaintBrush className="text-gray-800 text-2xl" />,
+    link: '/services/GraphicsDesign',
   },
   {
     id: 4,
     title: 'Content Writing',
     description: 'Creating persuasive and engaging content tailored to your target audience and business goals.',
     icon: <FaPenNib className="text-gray-800 text-2xl" />,
+    link: '/services/ContentWriting',
   },
   {
     id: 5,
     title: 'Digital & Organic Marketing',
     description: 'Driving brand growth through strategic digital campaigns and organic audience engagement.',
     icon: <FaBullhorn className="text-gray-800 text-2xl" />,
+    link: '/services/digital-marketing',
   },
   {
     id: 6,
     title: 'HR & Recruitment',
     description: 'Streamlining hiring processes and sourcing top talent to meet your business needs.',
     icon: <FaUsersCog className="text-gray-800 text-2xl" />,
+    link: '/services/hr-recruitment',
   },
   {
     id: 7,
     title: 'MS Office Services',
     description: 'Professional document creation, data management, and reporting using the full MS Office suite.',
     icon: <FaFileWord className="text-gray-800 text-2xl" />,
+    link: '/services/MSOfficeServices',
   },
   {
     id: 8,
     title: 'Data Analysis',
     description: 'Transforming raw data into actionable insights through advanced analytics and visualization.',
     icon: <FaChartLine className="text-gray-800 text-2xl" />,
+    link: '/services/data-analysis',
   },
 ];
 
 const ProcessFlow = () => {
   return (
-    <div className="relative bg-white text-gray-900 py-24 px-6 md:px-20 overflow-hidden">
+    <div className="relative bg-white text-gray-900 py-24 px-6  md:px-5 overflow-hidden">
       {/* Background Dots */}
       <div className="absolute inset-0 bg-[url('https://i.ibb.co/0jRkBG51/Screenshot-2025-05-26-160147.png')] bg-repeat opacity-30 z-0" />
 
@@ -87,36 +96,33 @@ const ProcessFlow = () => {
               key={step.id}
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.3, duration: 0.6, ease: 'easeOut' }}
-              className={`relative w-full flex flex-col md:flex-row items-center ${
-                index % 2 === 0 ? 'md:justify-start' : 'md:justify-end'
-              }`}
+              transition={{ delay: index * 0.15, duration: 0.3, ease: 'easeOut' }}
+              className={`relative w-full flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:justify-start' : 'md:justify-end'
+                }`}
             >
+
               {/* Curved Line */}
               {index > 0 && (
                 <div
-                  className={`hidden md:block absolute top-[-80px] ${
-                    index % 2 === 0 ? 'left-16' : 'right-16'
-                  } w-16 h-20 border-l-2 border-b-2 border-gray-400 rounded-bl-xl ${
-                    index % 2 !== 0 ? 'rotate-180' : ''
-                  }`}
+                  className={`hidden md:block absolute top-[-80px] ${index % 2 === 0 ? 'left-16' : 'right-16'
+                    } w-16 h-20 border-l-2 border-b-2 border-gray-400 rounded-bl-xl ${index % 2 !== 0 ? 'rotate-180' : ''
+                    }`}
                 />
               )}
 
               {/* Step Number Circle */}
               <div
-                className={`absolute -top-6 md:top-0 md:translate-y-[-50%] ${
-                  index % 2 === 0 ? 'left-0 md:left-16' : 'right-0 md:right-16'
-                } flex items-center justify-center bg-blue-600 w-10 h-10 rounded-full font-bold text-white z-20 shadow-lg`}
+                className={`absolute -top-6 md:top-0 md:translate-y-[-50%] ${index % 2 === 0 ? 'left-0 md:left-16' : 'right-0 md:right-16'
+                  } flex items-center justify-center bg-blue-600 w-10 h-10 rounded-full font-bold text-white z-20 shadow-lg`}
               >
                 {step.id}
               </div>
 
-              {/* 3D Card */}
-              <div
-                className={`group bg-white rounded-xl p-6 shadow-xl max-w-lg w-full border border-gray-200 transition-transform duration-500 perspective-3d hover-card ${
-                  index % 2 === 0 ? 'md:ml-20' : 'md:mr-20'
-                }`}
+              {/* Clickable Card */}
+              <Link
+                to={step.link}
+                className={`group bg-white rounded-xl p-6 shadow-xl max-w-lg w-full border border-gray-200 transition-transform duration-500 perspective-3d hover-card ${index % 2 === 0 ? 'md:ml-20' : 'md:mr-20'
+                  } hover:shadow-2xl hover:scale-[1.03]`}
               >
                 <div className="flex items-center gap-4">
                   <div className="bg-gray-100 p-3 rounded-full shadow-inner">
@@ -127,7 +133,7 @@ const ProcessFlow = () => {
                     <p className="text-sm text-gray-600 mt-1">{step.description}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           );
         })}

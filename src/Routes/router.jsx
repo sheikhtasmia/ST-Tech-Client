@@ -13,6 +13,12 @@ import GraphicsDesign from "../Pages/Services/GraphicsDesign/GraphicsDesign";
 import ContentWriting from "../Pages/Services/ContentWriting/ContentWriting";
 import HRRecruitment from "../Pages/Services/HRRecruitment/HRRecruitment";
 import MSOfficeServices from "../Pages/Services/MSOfficeServices/MSOfficeServices";
+import Contact from "../Pages/Contact/Contact";
+import Dashboard from "../Layout/Dashboard/Dashboard";
+
+import Work from "../Pages/DashboardPage/Work/Work";
+import Profile from "../Pages/DashboardPage/Profile/Profile";
+import UserHome from "../Pages/DashboardPage/UserHome/UserHome";
 
 const router = createBrowserRouter([
     {
@@ -66,6 +72,11 @@ const router = createBrowserRouter([
             },
 
             {
+                path:'/contact',
+                element:<Contact></Contact>
+            },
+
+            {
                 path:'/login',
                 element:<Login></Login>
             },
@@ -75,6 +86,27 @@ const router = createBrowserRouter([
                 element:<Registration></Registration>
             },
         ],
+    },
+
+    {
+        path:'dashboard',
+        element:<Dashboard></Dashboard>,
+        children:[
+
+            {
+                path:'userhome',
+                element:<UserHome></UserHome>
+            },
+            {
+                path:'work',
+                element:<Work></Work>
+            },
+
+            {
+                path:'profile',
+                element:<Profile></Profile>
+            },
+        ]
     },
 ]);
 

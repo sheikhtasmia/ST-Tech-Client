@@ -32,8 +32,8 @@ const AnimatedCursor = () => {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[9999]
-      flex items-center justify-center bg-black -translate-x-1/2 -translate-y-1/2 shadow-md"
+      className="fixed max-sm:hidden top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[9999]
+      flex items-center justify-center bg-black/75 -translate-x-1/2 -translate-y-1/2 shadow-md"
     >
       <div className="w-1.5 h-1.5 bg-white rounded-full" />
     </div>
