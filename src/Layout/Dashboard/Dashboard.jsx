@@ -8,7 +8,7 @@ import {
   FaBars,
   FaTimes
 } from 'react-icons/fa';
-import { AuthContext } from '../../providers/AuthProvider'; // Adjust if needed
+import { AuthContext } from '../../Providers/AuthProvider'; // Adjust if needed
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
