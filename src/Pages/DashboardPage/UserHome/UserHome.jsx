@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Briefcase, CheckCircle, MessageSquare } from 'lucide-react';
-import { AuthContext } from '../../../providers/AuthProvider';
+import { AuthContext } from '../../../Providers/AuthProvider';
 
 const UserHome = () => {
   const { user } = useContext(AuthContext);
