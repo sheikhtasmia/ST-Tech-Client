@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import toast, { Toaster } from "react-hot-toast";
 import { fireConfetti } from "../utils/confetti";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 
 const Login = () => {
@@ -132,12 +133,14 @@ const Login = () => {
                         </div>
                         <p className="text-gray-500 text-sm text-center mb-5">Strategic communication starts here.</p>
 
-                        <div className="mb-5">
+                        {/* <div className="mb-5">
                             <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-3 w-full py-3 bg-white text-gray-700 border border-gray-300 rounded-xl shadow hover:shadow-md transition-all hover:bg-gray-50">
                                 <FcGoogle className="text-2xl" />
                                 <span className="text-sm font-medium">Continue with Google</span>
                             </button>
-                        </div>
+                        </div> */}
+
+                        <SocialLogin></SocialLogin>
 
                         {/* Divider */}
                         <div className="relative mb-5">

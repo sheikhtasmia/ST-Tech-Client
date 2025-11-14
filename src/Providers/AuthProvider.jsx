@@ -10,6 +10,7 @@ import {
     updateProfile 
 } from "firebase/auth";
 import { app } from "../firebase/firebase.config";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 // Create a context for authentication
 export const AuthContext = createContext(null);
@@ -21,6 +22,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const googleProvider = new GoogleAuthProvider();
+    const axiosPublic = useAxiosPublic();
 
     // Create new user with email & password
     const createUser = (email, password) => {
@@ -45,6 +47,8 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
+ 
+
     const updateUserProfile = (profile) => {
         if (!auth.currentUser) return Promise.reject("No user is logged in");
         setLoading(true);
@@ -55,13 +59,27 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            if(currentUser){
+                // do something
+                const userInfo = {email: currentUser.email};
+                axiosPublic.post('/jwt', userInfo )
+                .then(res =>{
+                    if(res.data.token){
+                        localStorage.setItem('access-token', res.data.token);
+                    }
+                })
+            }
+            else{
+                // do something
+                localStorage.removeItem('access-token')
+            }
             console.log("currentUser:", currentUser);
             setLoading(false);
         });
 
         // Cleanup the listener when component unmounts
         return () => unsubscribe();
-    }, []);
+    }, [axiosPublic]);
 
     // Authentication information to share with children components
     const authInfo = {

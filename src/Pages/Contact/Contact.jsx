@@ -113,17 +113,17 @@ const Contact = () => {
               variants={itemVariants}
             >
               <motion.div 
-                className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center mb-6 shadow-inner border-4 border-white"
+                className="w-32 h-32 rounded-full  flex items-center justify-center mb-6 shadow-inner border-4 border-white"
                 whileHover={{ rotate: 5, scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                <div className="w-28 h-28 rounded-full  flex items-center justify-center shadow-md">
                   <span className="text-white text-2xl font-bold">
-                    <img className="w-[100px]" src="https://i.ibb.co/HDPgsNx3/download-13.png" alt="" />
+                    <img className="w-[100px]" src="https://i.ibb.co.com/LdJDQ7kg/download-25.png" alt="" />
                   </span>
                 </div>
               </motion.div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">ST Tech Works</h3>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">STechNova Works</h3>
               <p className="text-gray-600 text-center">
                 Digital Creator & Developer based in Dhaka, Bangladesh
               </p>
