@@ -1,6 +1,6 @@
 // import React, { useContext, useState, useEffect } from "react";
 // import { FaUserEdit, FaSave, FaTimes, FaEnvelope, FaUser, FaCheckCircle, FaCamera } from "react-icons/fa";
-// import { AuthContext } from "../../../providers/AuthProvider";
+// import { AuthContext } from "../../../Providers/AuthProvider";
 
 // const Profile = () => {
 //   const { user, loading, updateUserProfile } = useContext(AuthContext);
