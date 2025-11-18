@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Briefcase, CheckCircle, MessageSquare, Loader2 } from 'lucide-react';
-import { AuthContext } from '../../../providers/AuthProvider';
+import { AuthContext } from '../../../Providers/AuthProvider';
 
 const API_ENDPOINT_WORKS = 'http://localhost:5000/api/works';
 
