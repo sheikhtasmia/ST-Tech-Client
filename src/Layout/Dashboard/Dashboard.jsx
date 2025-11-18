@@ -31,8 +31,8 @@ import {
 import { IoPeople } from 'react-icons/io5';
 
 // You will need to import your actual AuthContext and useAdmin hook
-import { AuthContext } from '../../providers/AuthProvider';
-import useAdmin from '../../hooks/useAdmin';
+ import { AuthContext } from '../../providers/AuthProvider';
+ import useAdmin from '../../hooks/useAdmin';
 
 // --- UserDropdown Component (Adopted from the first block, needs FaSignOutAlt) ---
 const UserDropdown = ({ user, onLogout }) => {
