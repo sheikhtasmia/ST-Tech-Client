@@ -68,11 +68,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-<<<<<<< HEAD
-            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">STchNova</span>
-=======
             Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">STechNova</span>
->>>>>>> c9f627ff1ead362e2146104a157c6b9dc458a802
           </motion.h2>
           <motion.p 
             className="text-lg text-gray-600 max-w-2xl mx-auto"
