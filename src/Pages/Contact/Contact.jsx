@@ -68,7 +68,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">ST Tech Works</span>
+            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">STechNova</span>
           </motion.h2>
           <motion.p 
             className="text-lg text-gray-600 max-w-2xl mx-auto"
@@ -123,9 +123,9 @@ const Contact = () => {
                   </span>
                 </div>
               </motion.div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">STechNova Works</h3>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">STechNova</h3>
               <p className="text-gray-600 text-center">
-                Digital Creator & Developer based in Dhaka, Bangladesh
+                Digital service providing agency based in Dhaka, Bangladesh
               </p>
             </motion.div>
 
