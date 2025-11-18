@@ -163,7 +163,7 @@ const About = () => {
           </span>
 
           <h1 className="text-2xl md:text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 to-blue-600 bg-clip-text text-transparent relative z-10">
-            Our SN STechNova Team Members
+            Our STechNova's Team Members
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light relative z-10">
