@@ -6,10 +6,11 @@ import {
   FaStar,
   FaAward,
   FaHandshake,
-  FaHeart
+  FaHeart,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
+import { ROOT } from "../../constant/motherUrl";
 
 const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
   return (
@@ -20,11 +21,11 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
       transition={{
         duration: 0.6,
         ease: "easeOut",
-        delay: index * 0.1
+        delay: index * 0.1,
       }}
       whileHover={{
         y: -8,
-        transition: { duration: 0.3 }
+        transition: { duration: 0.3 },
       }}
       className="group relative w-full bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
     >
@@ -59,10 +60,10 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
           </div>
 
           <p className="text-gray-600 leading-relaxed text-lg">
-            {name.split(" ")[0]} combines technical expertise with creative vision to deliver exceptional digital solutions that drive business growth and user engagement.
+            {name.split(" ")[0]} combines technical expertise with creative
+            vision to deliver exceptional digital solutions that drive business
+            growth and user engagement.
           </p>
-
-          
 
           <div className="flex gap-4 pt-4">
             {linkedin && (
@@ -108,8 +109,8 @@ const About = () => {
     const fetchData = async () => {
       try {
         const [membersRes, projectsRes] = await Promise.all([
-          fetch("http://localhost:5000/members"),
-          fetch("http://localhost:5000/projects"),
+          fetch(`${ROOT}/members`),
+          fetch(`${ROOT}/projects`),
         ]);
 
         if (!membersRes.ok || !projectsRes.ok)
@@ -167,8 +168,9 @@ const About = () => {
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light relative z-10">
-            We're a collective of passionate innovators, developers, and designers
-            dedicated to crafting digital experiences that make a difference.
+            We're a collective of passionate innovators, developers, and
+            designers dedicated to crafting digital experiences that make a
+            difference.
           </p>
         </div>
       </motion.section>
@@ -214,8 +216,8 @@ const About = () => {
               Meet Our <span className="text-blue-600">Expert Team</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get to know the brilliant minds who turn complex challenges
-              into elegant digital solutions.
+              Get to know the brilliant minds who turn complex challenges into
+              elegant digital solutions.
             </p>
           </motion.div>
 
@@ -291,7 +293,8 @@ const About = () => {
           </h3>
           <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
             We're always looking for passionate, innovative minds to join our
-            growing family. If you're ready to make an impact, we'd love to hear from you.
+            growing family. If you're ready to make an impact, we'd love to hear
+            from you.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

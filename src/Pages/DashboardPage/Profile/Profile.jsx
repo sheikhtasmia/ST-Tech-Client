@@ -260,11 +260,18 @@
 //   );
 // };
 
-
-
 import React, { useContext, useState, useEffect } from "react";
-import { FaUserEdit, FaSave, FaTimes, FaEnvelope, FaUser, FaCheckCircle, FaCamera } from "react-icons/fa";
+import {
+  FaUserEdit,
+  FaSave,
+  FaTimes,
+  FaEnvelope,
+  FaUser,
+  FaCheckCircle,
+  FaCamera,
+} from "react-icons/fa";
 import { AuthContext } from "../../../providers/AuthProvider";
+import { ROOT } from "../../../constant/motherUrl";
 
 const Profile = () => {
   const { user, loading, updateUserProfile } = useContext(AuthContext);
@@ -276,7 +283,7 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const BACKEND_URL = "http://localhost:5000";
+  const BACKEND_URL = ROOT;
   const IMGBB_KEY = "fef551d0252d6e6b41362bdb5b2b0f99";
 
   useEffect(() => {
@@ -355,7 +362,9 @@ const Profile = () => {
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg font-medium">Loading profile data...</p>
+          <p className="text-gray-600 text-lg font-medium">
+            Loading profile data...
+          </p>
         </div>
       </div>
     );
@@ -366,8 +375,12 @@ const Profile = () => {
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         <div className="text-center p-12 bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20">
           <FaUser className="text-red-500 text-4xl mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Access Denied</h2>
-          <p className="text-gray-600">Please log in to view and edit your profile.</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Access Denied
+          </h2>
+          <p className="text-gray-600">
+            Please log in to view and edit your profile.
+          </p>
         </div>
       </div>
     );
@@ -389,7 +402,7 @@ const Profile = () => {
       <div className="max-w-full mx-auto">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            <FaUser className="inline-block mr-3 align-text-bottom" />   Profile
+            <FaUser className="inline-block mr-3 align-text-bottom" /> Profile
           </h1>
           <p className="text-gray-600 text-lg max-w-lg mx-auto">
             Your essential account information.
@@ -405,7 +418,9 @@ const Profile = () => {
                     <img
                       src={
                         photoURL ||
-                        `https://ui-avatars.com/api/?name=${displayName || "User"}&background=4F46E5&color=ffffff&size=128&bold=true&font-size=0.5`
+                        `https://ui-avatars.com/api/?name=${
+                          displayName || "User"
+                        }&background=4F46E5&color=ffffff&size=128&bold=true&font-size=0.5`
                       }
                       alt="Profile"
                       className="w-full h-full rounded-3xl object-cover border-4 border-white transition-all duration-300"
@@ -415,7 +430,11 @@ const Profile = () => {
                   {isEditing && (
                     <label className="absolute bottom-0 right-0 bg-white rounded-full p-3 shadow cursor-pointer">
                       <FaCamera className="text-gray-700" />
-                      <input type="file" onChange={uploadToImgbb} className="hidden" />
+                      <input
+                        type="file"
+                        onChange={uploadToImgbb}
+                        className="hidden"
+                      />
                     </label>
                   )}
                 </div>
@@ -427,14 +446,18 @@ const Profile = () => {
                 <div className="space-y-3 pt-4 border-t border-gray-200 mx-auto max-w-xs">
                   <div className="flex items-center justify-center gap-2 text-gray-600">
                     <FaEnvelope className="text-indigo-500 flex-shrink-0" />
-                    <span className="truncate text-sm">{user.email || "N/A"}</span>
+                    <span className="truncate text-sm">
+                      {user.email || "N/A"}
+                    </span>
                   </div>
                   <div className="flex items-center justify-center gap-2 text-gray-600">
                     <FaCheckCircle className="text-indigo-500 flex-shrink-0" />
                     <span className="font-medium text-gray-800 text-sm">
                       Joined:{" "}
                       {user.metadata?.creationTime
-                        ? new Date(user.metadata.creationTime).toLocaleDateString()
+                        ? new Date(
+                            user.metadata.creationTime
+                          ).toLocaleDateString()
                         : "Unknown"}
                     </span>
                   </div>
@@ -446,7 +469,9 @@ const Profile = () => {
           <div className="lg:col-span-2">
             <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-10">
               <div className="flex justify-between items-center mb-10 pb-4 border-b border-gray-200">
-                <h3 className="text-3xl font-bold text-gray-800">Update Authentication Details</h3>
+                <h3 className="text-3xl font-bold text-gray-800">
+                  Update Authentication Details
+                </h3>
 
                 {!isEditing ? (
                   <button
@@ -480,7 +505,9 @@ const Profile = () => {
 
               {error && (
                 <div className="mb-8 bg-red-100 border border-red-300 rounded-xl p-5">
-                  <p className="text-red-700 text-base font-medium">⚠️ Error: {error}</p>
+                  <p className="text-red-700 text-base font-medium">
+                    ⚠️ Error: {error}
+                  </p>
                 </div>
               )}
 
@@ -566,10 +593,11 @@ const ProfileInputField = ({
       </label>
       {isReadOnly ? (
         <div
-          className={`w-full ${readOnlyValue
-            ? "bg-gray-100/70 text-gray-600"
-            : "bg-gray-50/50 text-gray-800 font-semibold"
-            } border-2 border-transparent rounded-2xl px-6 py-4`}
+          className={`w-full ${
+            readOnlyValue
+              ? "bg-gray-100/70 text-gray-600"
+              : "bg-gray-50/50 text-gray-800 font-semibold"
+          } border-2 border-transparent rounded-2xl px-6 py-4`}
         >
           {readOnlyValue || value || "Not set"}
         </div>
@@ -582,7 +610,9 @@ const ProfileInputField = ({
           placeholder={placeholder}
         />
       )}
-      {helperText && <p className="text-xs text-gray-500 mt-2 ml-1">{helperText}</p>}
+      {helperText && (
+        <p className="text-xs text-gray-500 mt-2 ml-1">{helperText}</p>
+      )}
     </div>
   );
 };
