@@ -109,7 +109,7 @@ const Footer = () => {
             {/* Footer Bottom */}
             <div className="border-t border-gray-200 mt-10 pt-4 text-xs text-gray-500 text-center flex flex-col md:flex-row justify-between items-center px-4 max-w-7xl mx-auto">
                 <p className="mb-2 md:mb-0">
-                    © 2025 <span className="font-semibold text-gray-800">ST Tech Work</span> | Developed By <span className="font-semibold text-gray-800">ST Tech works team member</span>
+                    © 2025 <span className="font-semibold text-gray-800">STechNest</span> | Developed By <span className="font-semibold text-gray-800">STechNest team member</span>
                 </p>
                 <div className="flex gap-4">
                     <a href="#" className="hover:underline hover:text-blue-600 transition">Support Policy</a>

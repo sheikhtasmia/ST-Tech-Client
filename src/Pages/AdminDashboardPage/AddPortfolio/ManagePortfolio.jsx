@@ -59,7 +59,7 @@ const ManagePortfolio = () => {
             className="h-10 w-10"
           />
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-            ST Tech | Manage Portfolio
+            STechNest | Manage Portfolio
           </h1>
         </div>
       </header>

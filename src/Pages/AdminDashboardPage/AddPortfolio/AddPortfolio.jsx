@@ -69,7 +69,7 @@ const AddPortfolio = () => {
                         className="h-10 w-10"
                     />
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                        ST Tech | Add Project
+                        STechNest | Add Project
                     </h1>
                 </div>
             </header>

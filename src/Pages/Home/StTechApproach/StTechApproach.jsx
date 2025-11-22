@@ -81,7 +81,7 @@ export default function StTechApproach() {
   return (
     <div>
       <h1 className="md:mx-32 mx-10 text-black md:text-5xl text-2xl font-semibold mb-10">
-        The ST Tech Approach
+        The STechNest Approach
       </h1>
       <div className="bg-white py-16 px-4 md:px-12">
         <div className="max-w-full mx-auto">

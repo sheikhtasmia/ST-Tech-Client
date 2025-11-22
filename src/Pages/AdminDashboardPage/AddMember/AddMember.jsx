@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
@@ -9,7 +8,7 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 
 const AddMember = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const axiosPublic = useAxiosPublic(); // ✅ token-based axios
+    const axiosPublic = useAxiosPublic();
 
     const onSubmit = async (data) => {
         try {
@@ -20,12 +19,13 @@ const AddMember = () => {
             const imageRes = await axiosPublic.post(image_hosting_api, imageFile);
             const imageUrl = imageRes.data.data.display_url;
 
-            // 2. Prepare new member data
+            // 2. Prepare new member data with description
             const newMember = {
                 name: data.name,
                 role: data.role,
                 linkedin: data.linkedin,
                 portfolio: data.portfolio,
+                description: data.description, // ✅ Added description
                 photo: imageUrl,
                 createdAt: new Date()
             };
@@ -86,14 +86,24 @@ const AddMember = () => {
                             { name: "role", label: "Member Role", placeholder: "e.g. Backend Developer" },
                             { name: "linkedin", label: "LinkedIn URL", placeholder: "https://linkedin.com/in/username" },
                             { name: "portfolio", label: "Portfolio URL", placeholder: "https://yourwebsite.com" },
+                            { name: "description", label: "Description", placeholder: "Brief intro about the member" }, // ✅ Description field
                         ].map(field => (
                             <div key={field.name} className="relative">
-                                <input
-                                    type="text"
-                                    placeholder=" "
-                                    {...register(field.name, { required: `${field.label} is required` })}
-                                    className="peer w-full bg-gray-50 text-gray-900 text-sm sm:text-base px-4 pt-6 pb-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
+                                {field.name !== "description" ? (
+                                    <input
+                                        type="text"
+                                        placeholder=" "
+                                        {...register(field.name, { required: `${field.label} is required` })}
+                                        className="peer w-full bg-gray-50 text-gray-900 text-sm sm:text-base px-4 pt-6 pb-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                ) : (
+                                    <textarea
+                                        placeholder=" "
+                                        {...register(field.name, { required: `${field.label} is required` })}
+                                        className="peer w-full bg-gray-50 text-gray-900 text-sm sm:text-base px-4 pt-6 pb-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-24"
+                                    />
+                                )}
+
                                 <label className="absolute left-4 top-2 text-gray-500 text-xs sm:text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-600">
                                     {field.label}
                                 </label>
