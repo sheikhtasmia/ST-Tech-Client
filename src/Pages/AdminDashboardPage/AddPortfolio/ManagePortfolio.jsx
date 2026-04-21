@@ -1,155 +1,200 @@
 import React, { useEffect, useState } from "react";
-import { FaTrashAlt, FaGlobe, FaFacebookF } from "react-icons/fa";
+import { FaTrashAlt, FaGlobe, FaFacebookF, FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../../hooks/useAxiosPublic";
+
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const ManagePortfolio = () => {
   const axiosPublic = useAxiosPublic();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all projects
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await axiosPublic.get("/projects");
-        setProjects(res.data);
-      } catch (err) {
-        console.error("Error fetching projects:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProjects();
-  }, [axiosPublic]);
+  }, []);
 
-  // Delete handler
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosPublic.get("/projects");
+      setProjects(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (id) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "This project will be permanently deleted!",
+      title: "Confirm Delete?",
+      text: "This action cannot be undone",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#2563eb",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#101827",
+      cancelButtonColor: "#f3f4f6",
+      confirmButtonText: "<span style='color:white'>Delete</span>",
+      cancelButtonText: "<span style='color:#374151'>Cancel</span>",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await axiosPublic.delete(`/projects/${id}`);
-          if (res.data.success) {
-            setProjects(projects.filter((p) => p._id !== id));
-            Swal.fire("Deleted!", "Project has been removed.", "success");
+          const token = localStorage.getItem("access-token");
+          const res = await axiosPublic.delete(`/projects/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+          });
+          if (res.data.deletedCount > 0) {
+            const remaining = projects.filter((p) => p._id !== id);
+            setProjects(remaining);
+            Swal.fire({ icon: "success", title: "Project Removed", showConfirmButton: false, timer: 1500 });
           }
         } catch (err) {
-          console.error("Delete error:", err);
-          Swal.fire("Error!", "Failed to delete project.", "error");
+          Swal.fire("Error", "Could not delete project", "error");
         }
       }
     });
   };
 
-  return (
-    <div className="min-h-screen w-full bg-white">
-      <header className="w-full px-6 py-4 shadow-sm border-b flex items-center justify-between bg-white">
-        <div className="flex items-center gap-2">
-          <img
-            src="https://i.ibb.co/HDPgsNx3/download-13.png"
-            alt="Logo"
-            className="h-10 w-10"
-          />
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-            ST Tech | Manage Portfolio
-          </h1>
+  const handleUpdate = async (project) => {
+    const { value: formValues } = await Swal.fire({
+      title: "Edit Project Details",
+      html: `
+        <div style="display: flex; flex-direction: column; gap: 12px; text-align: left;">
+          <input id="up-name" class="swal2-input" style="width: 90%; font-size: 14px;" placeholder="Brand Name" value="${project.brandName}">
+          <input id="up-fb" class="swal2-input" style="width: 90%; font-size: 14px;" placeholder="Facebook URL" value="${project.facebook || ""}">
+          <input id="up-web" class="swal2-input" style="width: 90%; font-size: 14px;" placeholder="Website URL" value="${project.website || ""}">
+          <textarea id="up-desc" class="swal2-textarea" style="width: 90%; font-size: 14px; height: 70px;" placeholder="Description">${project.Description}</textarea>
+          <div style="font-size: 12px; color: #6b7280; padding-left: 10px;">
+            Change Logo: <input type="file" id="up-logo" style="margin-bottom: 8px;"><br>
+            Change Thumbnail: <input type="file" id="up-thumb">
+          </div>
         </div>
-      </header>
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Update Now",
+      confirmButtonColor: "#2563eb",
+      preConfirm: async () => {
+        const logoFile = document.getElementById("up-logo").files[0];
+        const thumbFile = document.getElementById("up-thumb").files[0];
+        
+        Swal.showLoading();
+        
+        let brandLogo = project.brandLogo;
+        let thumbnail = project.thumbnail;
 
-      <section className="px-6 py-10">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-          Project List
-        </h2>
+        try {
+          if (logoFile) {
+            const formData = new FormData();
+            formData.append("image", logoFile);
+            const res = await axiosPublic.post(image_hosting_api, formData);
+            brandLogo = res.data.data.display_url;
+          }
+          if (thumbFile) {
+            const formData = new FormData();
+            formData.append("image", thumbFile);
+            const res = await axiosPublic.post(image_hosting_api, formData);
+            thumbnail = res.data.data.display_url;
+          }
+          return {
+            brandName: document.getElementById("up-name").value,
+            facebook: document.getElementById("up-fb").value,
+            website: document.getElementById("up-web").value,
+            Description: document.getElementById("up-desc").value,
+            brandLogo,
+            thumbnail,
+          };
+        } catch (err) {
+          Swal.showValidationMessage("Upload failed");
+        }
+      },
+    });
 
-        {loading ? (
-          <div className="text-center text-gray-600 py-10">Loading...</div>
-        ) : projects.length === 0 ? (
-          <div className="text-center text-gray-600 py-10">
-            No projects found.
-          </div>
-        ) : (
-          <div className="overflow-x-auto bg-white shadow-lg border border-gray-100 rounded-2xl">
-            <table className="min-w-full text-sm text-left text-gray-700">
-              <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
-                <tr>
-                  <th className="px-6 py-3">Thumbnail</th>
-                  <th className="px-6 py-3">Brand Name</th>
-                  <th className="px-6 py-3">Facebook</th>
-                  <th className="px-6 py-3">Website</th>
-                  <th className="px-6 py-3">Created</th>
-                  <th className="px-6 py-3 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map((project) => (
-                  <tr
-                    key={project._id}
-                    className="border-b hover:bg-gray-50 transition"
-                  >
-                    <td className="px-6 py-3">
-                      <img
-                        src={project.thumbnail}
-                        alt={project.brandName}
-                        className="w-16 h-16 rounded-md object-cover border"
-                      />
-                    </td>
-                    <td className="px-6 py-3 font-medium text-gray-900">
-                      {project.brandName}
-                    </td>
-                    <td className="px-6 py-3">
-                      {project.facebook ? (
-                        <a
-                          href={project.facebook}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <FaFacebookF />
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td className="px-6 py-3">
-                      {project.website ? (
-                        <a
-                          href={project.website}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-gray-700 hover:text-gray-900"
-                        >
-                          <FaGlobe />
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td className="px-6 py-3 text-gray-500">
-                      {new Date(project.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-3 text-center">
-                      <button
-                        onClick={() => handleDelete(project._id)}
-                        className="text-red-600 hover:text-red-800 transition"
-                      >
-                        <FaTrashAlt size={18} />
+    if (formValues) {
+      try {
+        const token = localStorage.getItem("access-token");
+        const res = await axiosPublic.patch(`/projects/${project._id}`, formValues, {
+          headers: { authorization: `Bearer ${token}` },
+        });
+        if (res.data.matchedCount > 0) {
+          fetchProjects();
+          Swal.fire({ icon: "success", title: "Updated", showConfirmButton: false, timer: 1500 });
+        }
+      } catch (err) {
+        Swal.fire("Error", "Update failed", "error");
+      }
+    }
+  };
+
+  const SkeletonRow = () => (
+    <tr className="animate-pulse border-b">
+      <td className="p-4"><div className="w-16 h-10 bg-gray-100 rounded"></div></td>
+      <td className="p-4"><div className="h-4 bg-gray-100 rounded w-32"></div></td>
+      <td className="p-4"><div className="w-6 h-6 bg-gray-100 rounded-full"></div></td>
+      <td className="p-4"><div className="w-6 h-6 bg-gray-100 rounded-full"></div></td>
+      <td className="p-4 text-center"><div className="flex justify-center gap-3"><div className="w-6 h-6 bg-gray-100 rounded"></div><div className="w-6 h-6 bg-gray-100 rounded"></div></div></td>
+    </tr>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-10">
+      <div className="max-w-full mx-auto px-4">
+        <div className="mb-8">
+          <h1 className="text-2xl text-gray-800">Manage Portfolio</h1>
+          <p className="text-sm text-gray-500">Edit or remove your project entries</p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="text-xs text-gray-500 uppercase">
+                <th className="p-4 font-medium">Image</th>
+                <th className="p-4 font-medium">Project Name</th>
+                <th className="p-4 font-medium">FB</th>
+                <th className="p-4 font-medium">Web</th>
+                <th className="p-4 font-medium text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm text-gray-700 divide-y divide-gray-100">
+              {loading ? (
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
+              ) : projects.map((project) => (
+                <tr key={project._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="p-4">
+                    <img src={project.thumbnail} className="w-16 h-10 object-cover rounded border border-gray-100" alt="" />
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <img src={project.brandLogo} className="w-5 h-5 object-contain" alt="" />
+                      <span>{project.brandName}</span>
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    {project.facebook ? <a href={project.facebook} target="_blank" className="text-gray-400 hover:text-blue-600"><FaFacebookF /></a> : "-"}
+                  </td>
+                  <td className="p-4">
+                    {project.website ? <a href={project.website} target="_blank" className="text-gray-400 hover:text-gray-800"><FaGlobe /></a> : "-"}
+                  </td>
+                  <td className="p-4">
+                    <div className="flex justify-center gap-4">
+                      <button onClick={() => handleUpdate(project)} className="text-gray-400 hover:text-blue-600 transition-colors">
+                        <FaEdit size={16} />
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+                      <button onClick={() => handleDelete(project._id)} className="text-gray-400 hover:text-red-600 transition-colors">
+                        <FaTrashAlt size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };

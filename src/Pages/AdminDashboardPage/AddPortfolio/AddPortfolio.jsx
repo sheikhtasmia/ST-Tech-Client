@@ -61,18 +61,7 @@ const AddPortfolio = () => {
     return (
         <div className="min-h-screen w-full bg-gray-50">
             {/* Header */}
-            <header className="w-full px-6 py-4 shadow-sm border-b bg-white flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <img
-                        src="https://i.ibb.co/HDPgsNx3/download-13.png"
-                        alt="Logo"
-                        className="h-10 w-10"
-                    />
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                        ST Tech | Add Project
-                    </h1>
-                </div>
-            </header>
+           
 
             {/* Form Section */}
             <section className="w-full flex items-center justify-center px-4 py-12">

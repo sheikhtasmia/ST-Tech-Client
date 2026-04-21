@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 
@@ -8,32 +7,33 @@ const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const AddMember = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const axiosPublic = useAxiosPublic(); // ✅ token-based axios
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const axiosPublic = useAxiosPublic();
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
-            // 1. Upload Image
             const imageFile = new FormData();
             imageFile.append('image', data.image[0]);
 
             const imageRes = await axiosPublic.post(image_hosting_api, imageFile);
             const imageUrl = imageRes.data.data.display_url;
 
-            // 2. Prepare new member data
             const newMember = {
                 name: data.name,
                 role: data.role,
+                description: data.description,
                 linkedin: data.linkedin,
                 portfolio: data.portfolio,
                 photo: imageUrl,
                 createdAt: new Date()
             };
 
-            // 3. Save to backend
             const res = await axiosPublic.post('/members', newMember);
 
             if (res.data.insertedId) {
+                reset();
                 Swal.fire({
                     title: 'Success!',
                     text: 'Member added successfully!',
@@ -49,18 +49,13 @@ const AddMember = () => {
                 icon: 'error',
                 confirmButtonText: 'Close'
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="min-h-screen w-full bg-white">
-            <header className="w-full px-6 py-4 shadow-sm border-b flex items-center justify-between bg-white">
-                <div className="flex items-center gap-2">
-                    <img src="https://i.ibb.co/HDPgsNx3/download-13.png" alt="Logo" className="h-10 w-10" />
-                    <h1 className="text-xl sm:text-2xl font-bold text-gray-800">ST Tech | Add Member</h1>
-                </div>
-            </header>
-
             <section className="w-full flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-full bg-white rounded-2xl shadow-lg border border-gray-100 p-8 sm:p-10">
                     <h2 className="text-2xl sm:text-3xl font-semibold text-center text-gray-800 mb-8">
@@ -68,7 +63,6 @@ const AddMember = () => {
                     </h2>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6">
-                        {/* Upload Photo */}
                         <div>
                             <label className="text-sm font-medium text-gray-700 mb-1 block">Upload Photo</label>
                             <input
@@ -80,7 +74,6 @@ const AddMember = () => {
                             {errors.image && <p className="text-xs text-red-500 mt-1">{errors.image.message}</p>}
                         </div>
 
-                        {/* Input Fields */}
                         {[
                             { name: "name", label: "Member Name", placeholder: "e.g. Sarah Khan" },
                             { name: "role", label: "Member Role", placeholder: "e.g. Backend Developer" },
@@ -101,12 +94,33 @@ const AddMember = () => {
                             </div>
                         ))}
 
+                        <div className="relative">
+                            <textarea
+                                placeholder=" "
+                                {...register("description", { required: "Description is required" })}
+                                className="peer w-full bg-gray-50 text-gray-900 text-sm sm:text-base px-4 pt-6 pb-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                            />
+                            <label className="absolute left-4 top-2 text-gray-500 text-xs sm:text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-600">
+                                Member Description
+                            </label>
+                            {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
+                        </div>
+
                         <div className="text-start pt-4">
                             <button
                                 type="submit"
-                                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition text-white font-medium px-6 py-3 rounded-lg shadow-md text-sm sm:text-base"
+                                disabled={loading}
+                                className={`w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition text-white font-medium px-6 py-3 rounded-lg shadow-md text-sm sm:text-base flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
-                                Add Member
+                                {loading ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Adding...
+                                    </>
+                                ) : 'Add Member'}
                             </button>
                         </div>
                     </form>

@@ -6,17 +6,22 @@ import {
   FaStar,
   FaAward,
   FaHandshake,
-  FaHeart
+  FaHeart,
+  FaSearch,
+  FaLightbulb,
+  FaEye,
+  FaLayerGroup
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 
-const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
+const TeamCard = ({ photo, name, role, linkedin, description, portfolio, index }) => {
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 50, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 20, scale: 0.9 }}
+      exit={{ opacity: 0, scale: 0.9 }}
       transition={{
         duration: 0.6,
         ease: "easeOut",
@@ -31,17 +36,15 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       <div className="relative flex flex-col lg:flex-row h-full">
-        {/* Image */}
         <div className="lg:w-2/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <img
-            src={photo || "/api/placeholder/400/500"}
+            src={photo || "https://via.placeholder.com/400x500"}
             alt={name}
             className="w-full h-64 lg:h-full object-cover transition-transform duration-700 group-hover:scale-110"
             loading="lazy"
           />
 
-          {/* Role Badge */}
           <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg">
             <span className="text-sm font-semibold text-gray-700 flex items-center gap-1">
               <FaRocket className="text-blue-600 text-xs" />
@@ -50,7 +53,6 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
           </div>
         </div>
 
-        {/* Info */}
         <div className="lg:w-3/5 p-8 flex flex-col justify-center space-y-6">
           <div className="space-y-3">
             <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
@@ -59,10 +61,8 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
           </div>
 
           <p className="text-gray-600 leading-relaxed text-lg">
-            {name.split(" ")[0]} combines technical expertise with creative vision to deliver exceptional digital solutions that drive business growth and user engagement.
+            {description || "Passionate about creating innovative digital solutions and driving technological excellence."}
           </p>
-
-          
 
           <div className="flex gap-4 pt-4">
             {linkedin && (
@@ -98,11 +98,32 @@ const TeamCard = ({ photo, name, role, linkedin, portfolio, index }) => {
   );
 };
 
+const SkeletonTeamCard = () => (
+  <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden border border-gray-100 flex flex-col lg:flex-row h-full min-h-[350px] animate-pulse">
+    <div className="lg:w-2/5 bg-gray-200 h-64 lg:h-full"></div>
+    <div className="lg:w-3/5 p-8 flex flex-col justify-center space-y-6">
+      <div className="h-8 bg-gray-200 rounded-md w-3/4"></div>
+      <div className="space-y-3">
+        <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+        <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+        <div className="h-4 bg-gray-200 rounded-md w-1/2"></div>
+      </div>
+      <div className="flex gap-4 pt-4">
+        <div className="h-10 bg-gray-200 rounded-lg w-28"></div>
+        <div className="h-10 bg-gray-200 rounded-lg w-28"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const About = () => {
   const [members, setMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState("All");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,14 +132,11 @@ const About = () => {
           fetch("http://localhost:5000/members"),
           fetch("http://localhost:5000/projects"),
         ]);
-
-        if (!membersRes.ok || !projectsRes.ok)
-          throw new Error("Failed to fetch data");
-
+        if (!membersRes.ok || !projectsRes.ok) throw new Error("Failed to fetch data");
         const membersData = await membersRes.json();
         const projectsData = await projectsRes.json();
-
         setMembers(membersData);
+        setFilteredMembers(membersData);
         setProjects(projectsData);
       } catch (err) {
         setError(err.message);
@@ -129,193 +147,162 @@ const About = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let result = members;
+    if (selectedRole !== "All") result = result.filter(m => m.role === selectedRole);
+    if (searchTerm) {
+      result = result.filter(m => 
+        m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.role.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredMembers(result);
+  }, [searchTerm, selectedRole, members]);
+
+  const roles = ["All", ...new Set(members.map(m => m.role))];
+
   const stats = [
-    {
-      icon: FaAward,
-      value: projects.length > 0 ? `${projects.length}+` : "0",
-      label: "Projects Completed",
-    },
-    {
-      icon: FaUsers,
-      value: members.length > 0 ? `${members.length}+` : "0",
-      label: "Team Members",
-    },
+    { icon: FaAward, value: projects.length > 0 ? `${projects.length}+` : "0", label: "Projects Completed" },
+    { icon: FaUsers, value: members.length > 0 ? `${members.length}+` : "0", label: "Team Members" },
     { icon: FaHandshake, value: "98%", label: "Client Satisfaction" },
     { icon: FaStar, value: "5+", label: "Years Experience" },
   ];
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-white text-gray-900 font-sans overflow-hidden">
-      {/* Header */}
+    <div className="w-full min-h-screen bg-white text-gray-900 font-sans">
       <motion.section
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative py-20 px-6 text-center bg-gradient-to-r from-blue-600/5 to-indigo-600/5"
+        className="relative pt-24 pb-16 px-6 text-center bg-gray-50"
       >
-        <div className="max-w-full mx-auto relative">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200/30 rounded-full blur-xl" />
-          <div className="absolute bottom-10 right-10 w-32 h-32 bg-purple-200/20 rounded-full blur-2xl" />
-
-          <span className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-semibold mb-8 shadow-lg relative z-10">
-            <FaHeart className="text-red-400" />
-            Meet Our Dream Team
+        <div className="max-w-full mx-auto">
+          <span className="bg-blue-600 text-white px-5 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block shadow-md">
+            Innovating the Digital Future
           </span>
-
-          <h1 className="text-2xl md:text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 to-blue-600 bg-clip-text text-transparent relative z-10">
-            Our SN STechNova Team Members
+          <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+            Empowering Your Vision with <br />
+            <span className="text-blue-600">STechNest</span> Solutions
           </h1>
-
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light relative z-10">
-            We're a collective of passionate innovators, developers, and designers
-            dedicated to crafting digital experiences that make a difference.
+          <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
+            STechNest is a dynamic digital agency transforming ideas into powerful digital experiences. 
+            We combine creativity, technology, and AI-driven solutions to solve complex problems and empower businesses.
           </p>
         </div>
       </motion.section>
 
-      {/* Dynamic Stats */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="py-16 px-6 bg-white/50 backdrop-blur-sm"
-      >
-        <div className="max-w-full mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
-              className="text-center group"
-            >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4 group-hover:bg-blue-600 transition-colors duration-300">
-                <stat.icon className="text-2xl text-blue-600 group-hover:text-white transition-colors duration-300" />
-              </div>
-              <div className="text-3xl font-bold text-gray-900 mb-2">
-                {stat.value}
-              </div>
-              <div className="text-gray-600 font-medium">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Team Members */}
-      <section className="py-20 px-6">
-        <div className="max-w-full mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Meet Our <span className="text-blue-600">Expert Team</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get to know the brilliant minds who turn complex challenges
-              into elegant digital solutions.
-            </p>
+      <section className="py-20 px-6 max-w-full mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all">
+            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+              <FaLightbulb className="text-blue-600 text-2xl" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+            <p className="text-gray-500 leading-relaxed">Deliver high-quality digital solutions and empower businesses with cutting-edge technology.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl animate-pulse shadow-lg"
-                />
-              ))
-            ) : error ? (
-              <div className="col-span-full text-center py-16">
-                <div className="text-red-500 text-6xl mb-4">⚠️</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Oops! Something went wrong
-                </h3>
-                <p className="text-gray-600 mb-6">{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : members.length === 0 ? (
-              <div className="col-span-full text-center py-16">
-                <div className="text-6xl mb-4">👥</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  No Team Members Found
-                </h3>
-                <p className="text-gray-600">
-                  We're currently building our dream team. Check back soon!
-                </p>
-              </div>
-            ) : (
-              <AnimatePresence>
-                {members.map((member, index) => (
-                  <TeamCard
-                    key={member._id}
-                    photo={member.photo}
-                    name={member.name}
-                    role={member.role}
-                    linkedin={member.linkedin}
-                    portfolio={member.portfolio}
-                    index={index}
-                  />
-                ))}
-              </AnimatePresence>
-            )}
-          </div>
+          <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all">
+            <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6">
+              <FaEye className="text-indigo-600 text-2xl" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
+            <p className="text-gray-500 leading-relaxed">To be a leading innovator in digital experiences, AI-driven solutions, and automation for modern enterprises.</p>
+          </motion.div>
+
+          <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl transition-all">
+            <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
+              <FaLayerGroup className="text-purple-600 text-2xl" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">Our Services</h3>
+            <p className="text-gray-500 leading-relaxed">Web & Mobile Development, AI Automation, UI/UX Design, Digital Strategy, and consulting.</p>
+          </motion.div>
         </div>
       </section>
 
-      {/* Join Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="relative py-20 px-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white overflow-hidden"
-      >
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2" />
+      <section className="py-16 px-6 bg-gray-50/50">
+        <div className="max-w-full mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center group">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-sm mb-4 group-hover:bg-blue-600 transition-all duration-300">
+                <stat.icon className="text-2xl text-blue-600 group-hover:text-white transition-colors" />
+              </div>
+              <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+              <div className="text-gray-500 text-sm font-medium">{stat.label}</div>
+            </div>
+          ))}
         </div>
+      </section>
 
-        <div className="relative max-w-4xl mx-auto text-center">
-          <h3 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Build the Future With Us?
-          </h3>
-          <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
-            We're always looking for passionate, innovative minds to join our
-            growing family. If you're ready to make an impact, we'd love to hear from you.
-          </p>
+      <section className="py-24 px-6 max-w-full mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+          <div className="text-left">
+            <span className="text-blue-600 font-bold tracking-widest text-xs uppercase mb-3 block">Expertise</span>
+            <h2 className="text-4xl md:text-5xl font-black">Meet Our Team</h2>
+          </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="/careers"
-              className="group bg-white text-blue-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-3xl flex items-center gap-3"
+          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+            <div className="relative flex-1 md:w-72">
+              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input 
+                type="text"
+                placeholder="Search name or role..."
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-100 transition-all"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <select 
+              className="px-6 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none cursor-pointer focus:ring-2 focus:ring-blue-100 font-medium"
+              onChange={(e) => setSelectedRole(e.target.value)}
+              value={selectedRole}
             >
-              <span>View Open Positions</span>
-              <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </motion.a>
-
-            <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              href="/contact"
-              className="border-2 border-white/30 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
-            >
-              Send Your CV
-            </motion.a>
+              {roles.map((role, idx) => (
+                <option key={idx} value={role}>{role}</option>
+              ))}
+            </select>
           </div>
         </div>
-      </motion.section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {loading ? (
+            [...Array(4)].map((_, index) => <SkeletonTeamCard key={index} />)
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredMembers.map((member, index) => (
+                <TeamCard
+                  key={member._id}
+                  photo={member.photo}
+                  name={member.name}
+                  role={member.role}
+                  description={member.description}
+                  linkedin={member.linkedin}
+                  portfolio={member.portfolio}
+                  index={index}
+                />
+              ))}
+            </AnimatePresence>
+          )}
+        </div>
+        
+        {!loading && filteredMembers.length === 0 && (
+          <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200 mt-10">
+            <p className="text-gray-400">No team members found.</p>
+          </div>
+        )}
+      </section>
+
+      <section className="py-24 px-6 bg-blue-600 text-white text-center">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-4xl md:text-5xl font-black mb-8">Ready to Build the Future With Us?</h3>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            href="/careers"
+            className="inline-flex items-center gap-3 bg-white text-blue-600 px-12 py-4 rounded-2xl font-bold text-lg shadow-xl"
+          >
+            <span>View Open Positions</span>
+            <FiArrowRight />
+          </motion.a>
+        </div>
+      </section>
     </div>
   );
 };

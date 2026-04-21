@@ -1,43 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
-import { FaFacebookF, FaGlobe, FaUsers, FaRocket, FaAward, FaCode } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { FaFacebookF, FaGlobe, FaRocket, FaCode, FaSearch, FaSortAmountDown, FaSortAmountUp } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Portfolio = () => {
     const axiosPublic = useAxiosPublic();
     const [projects, setProjects] = useState([]);
+    const [filteredProjects, setFilteredProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortOrder, setSortOrder] = useState("newest");
     const [stats, setStats] = useState({
         totalProjects: 0,
-        happyClients: 0,
-        experience: 0,
-        completed: 0
+        experience: 0
     });
 
     useEffect(() => {
         const fetchProjects = async () => {
+            setLoading(true);
             try {
                 const res = await axiosPublic.get('/projects');
                 setProjects(res.data);
-
-                // Stats update
+                setFilteredProjects(res.data);
                 setStats({
                     totalProjects: res.data.length,
-                    happyClients: res.data.filter(p => p.status === 'completed').length,
-                    experience: new Date().getFullYear() - 2020,
-                    completed: res.data.filter(p => p.status === 'completed').length
+                    experience: new Date().getFullYear() - 2020
                 });
             } catch (error) {
-                console.error('Error loading projects:', error);
+                console.error(error);
+            } finally {
+                setLoading(false);
             }
         };
-
         fetchProjects();
     }, [axiosPublic]);
 
-    // Stats Counter animation
+    useEffect(() => {
+        let result = [...projects];
+        if (searchTerm) {
+            result = result.filter(p => 
+                p.brandName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                p.Description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        result.sort((a, b) => {
+            const dateA = a._id;
+            const dateB = b._id;
+            return sortOrder === "newest" ? dateB.localeCompare(dateA) : dateA.localeCompare(dateB);
+        });
+        setFilteredProjects(result);
+    }, [searchTerm, sortOrder, projects]);
+
     const Counter = ({ value, duration = 2 }) => {
         const [count, setCount] = useState(0);
-
         useEffect(() => {
             let start = 0;
             const end = value;
@@ -53,187 +68,152 @@ const Portfolio = () => {
             }, 1000 / 60);
             return () => clearInterval(timer);
         }, [value, duration]);
-
         return count;
     };
 
+    const ProjectSkeleton = () => (
+        <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
+            <div className="aspect-[16/10] bg-gray-200"></div>
+            <div className="p-6 space-y-4">
+                <div className="h-6 bg-gray-200 rounded w-2/3"></div>
+                <div className="h-4 bg-gray-100 rounded w-full"></div>
+                <div className="h-4 bg-gray-100 rounded w-1/2"></div>
+            </div>
+        </div>
+    );
+
     return (
-        <div className="min-h-screen w-full">
-            {/* Hero Section */}
-            <section className="relative py-6 bg-gray-200 overflow-hidden">
-                <div className="relative max-w-full mx-auto text-center">
+        <div className="min-h-screen bg-white">
+            <section className="relative py-20 bg-gray-100 overflow-hidden">
+                <div className="relative max-w-7xl mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h1 className="text-2xl md:text-5xl font-black text-black mb-6 leading-tight">
-                            Creative <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Portfolio</span>
+                        <h1 className="text-4xl md:text-6xl font-black text-black mb-6 leading-tight">
+                            Creative <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">Portfolio</span>
                         </h1>
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="text-lg md:text-xl text-gray-900 max-w-4xl mx-auto leading-relaxed mb-12"
-                        >
-                            Where innovative design meets cutting-edge development.
-                            Explore our journey of transforming ideas into digital masterpieces.
-                        </motion.p>
+                        <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-12">
+                            Where innovative design meets cutting-edge development. Explore our journey of transforming ideas into digital masterpieces.
+                        </p>
                     </motion.div>
 
-                    {/* Stats */}
                     <motion.div
                         initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-20 max-w-xl mx-auto"
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="flex flex-wrap justify-center gap-12 mt-10"
                     >
-                        {[
-                            { icon: FaCode, value: stats.totalProjects, label: 'Projects Completed', suffix: '+', color: 'from-cyan-400 to-blue-500' },
-                            { icon: FaRocket, value: stats.experience, label: 'Years Experience', suffix: '+', color: 'from-purple-400 to-pink-500' },
-                        ].map((stat, index) => (
-                            <motion.div key={index} whileHover={{ scale: 1.05 }} className="text-center group">
-                                <div className={`w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                                    <stat.icon className="text-2xl text-white" />
-                                </div>
-                                <div className="text-4xl font-bold text-gray-900 mb-2">
-                                    <Counter value={stat.value} />{stat.suffix}
-                                </div>
-                                <div className="text-gray-900 text-sm font-medium">{stat.label}</div>
-                            </motion.div>
-                        ))}
+                        <div className="text-center group">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                                <FaCode className="text-xl text-white" />
+                            </div>
+                            <div className="text-3xl font-bold text-gray-900"><Counter value={stats.totalProjects} />+</div>
+                            <div className="text-gray-500 text-sm font-medium">Projects Done</div>
+                        </div>
+                        <div className="text-center group">
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                                <FaRocket className="text-xl text-white" />
+                            </div>
+                            <div className="text-3xl font-bold text-gray-900"><Counter value={stats.experience} />+</div>
+                            <div className="text-gray-500 text-sm font-medium">Years Experience</div>
+                        </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Projects Grid */}
-            <section className="px-6 py-20 max-w-full mx-auto">
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mb-16">
-                    <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
-                        Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Work</span>
-                    </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Each project tells a unique story of collaboration, innovation, and success
-                    </p>
-                </motion.div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project, index) => (
-                        <motion.div
-                            key={project._id || index}
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
-                            whileHover={{ y: -8 }}
-                            className="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 relative"
+            <section className="max-w-full mx-auto px-6 py-16">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="relative w-full md:w-96">
+                        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input 
+                            type="text" 
+                            placeholder="Search projects..." 
+                            className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 transition-all text-sm"
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="flex gap-2 bg-gray-50 p-1 rounded-xl w-full md:w-auto">
+                        <button 
+                            onClick={() => setSortOrder("newest")}
+                            className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm transition-all ${sortOrder === 'newest' ? 'bg-white shadow-sm text-blue-600 font-medium' : 'text-gray-500'}`}
                         >
-                            {/* Thumbnail with overlay */}
-                            <div className="relative h-64 overflow-hidden">
-                                <img
-                                    src={project.thumbnail || project.brandLogo}
-                                    alt={project.brandName}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            Newest
+                        </button>
+                        <button 
+                            onClick={() => setSortOrder("oldest")}
+                            className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-sm transition-all ${sortOrder === 'oldest' ? 'bg-white shadow-sm text-blue-600 font-medium' : 'text-gray-500'}`}
+                        >
+                            Oldest
+                        </button>
+                    </div>
+                </div>
 
-                                {/* Floating Brand Logo */}
-                                {project.brandLogo && (
-                                    <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md rounded-xl shadow-md p-2 flex items-center justify-center w-14 h-14">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {loading ? (
+                        [...Array(6)].map((_, i) => <ProjectSkeleton key={i} />)
+                    ) : (
+                        <AnimatePresence mode="popLayout">
+                            {filteredProjects.map((project) => (
+                                <motion.div
+                                    layout
+                                    key={project._id}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="group bg-white rounded-3xl border border-gray-100 hover:border-blue-200 transition-all duration-500 overflow-hidden"
+                                >
+                                    <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
                                         <img
-                                            src={project.brandLogo}
-                                            alt="Brand Logo"
-                                            className="w-10 h-10 object-contain rounded-md"
+                                            src={project.thumbnail}
+                                            alt={project.brandName}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
+                                        <div className="absolute top-4 left-4">
+                                            <img 
+                                                src={project.brandLogo} 
+                                                className="w-10 h-10 object-contain bg-white/90 backdrop-blur-md rounded-xl p-1.5 shadow-sm border border-white/20" 
+                                                alt="" 
+                                            />
+                                        </div>
                                     </div>
-                                )}
-                            </div>
 
-                            {/* Card Content */}
-                            <div className="p-6">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                            {project.brandName}
-                                        </h3>
-                                        <p className="text-gray-500 font-semibold text-sm line-clamp-2">
+                                    <div className="p-6">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h3 className="text-xl text-gray-800">{project.brandName}</h3>
+                                            <div className="flex gap-2">
+                                                {project.facebook && (
+                                                    <a href={project.facebook} target="_blank" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-all">
+                                                        <FaFacebookF size={12} />
+                                                    </a>
+                                                )}
+                                                {project.website && (
+                                                    <a href={project.website} target="_blank" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-gray-900 hover:text-white transition-all">
+                                                        <FaGlobe size={12} />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
                                             {project.Description}
                                         </p>
                                     </div>
-                                    <div className="flex gap-2">
-                                        {project.facebook && (
-                                            <a
-                                                href={project.facebook}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-100 transition-colors"
-                                            >
-                                                <FaFacebookF />
-                                            </a>
-                                        )}
-                                        {project.website && (
-                                            <a
-                                                href={project.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
-                                            >
-                                                <FaGlobe />
-                                            </a>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Bottom Gradient Border */}
-                            <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </motion.div>
-                    ))}
+                                    <div className="h-1.5 w-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    )}
                 </div>
 
-                {/* Empty State */}
-                {projects.length === 0 && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
-                        <div className="text-8xl mb-6">🚀</div>
-                        <h3 className="text-3xl font-bold text-gray-600 mb-4">Amazing Projects Coming Soon</h3>
-                        <p className="text-gray-500 max-w-md mx-auto text-lg">
-                            We're crafting something extraordinary. Stay tuned for our latest work!
-                        </p>
-                    </motion.div>
+                {!loading && filteredProjects.length === 0 && (
+                    <div className="text-center py-24 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                        <div className="text-4xl mb-4">🔍</div>
+                        <p className="text-gray-500">No projects found matching your search.</p>
+                    </div>
                 )}
-            </section>
-
-            {/* CTA */}
-            <section className="px-6 py-20 bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900">
-                <div className="max-w-4xl mx-auto text-center">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-5xl font-black text-white mb-6"
-                    >
-                        Ready to Start Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">Journey</span>?
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-xl text-blue-200 mb-8 max-w-2xl mx-auto"
-                    >
-                        Let's collaborate to create something amazing that drives your business forward.
-                    </motion.p>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="flex flex-wrap justify-center gap-4"
-                    >
-                        <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-2xl font-bold hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:-translate-y-1">
-                            Start Your Project
-                        </button>
-                        <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl font-bold hover:bg-white/20 transition-all duration-300 border border-white/20">
-                            View Our Process
-                        </button>
-                    </motion.div>
-                </div>
             </section>
         </div>
     );
