@@ -51,7 +51,7 @@ const Footer = () => {
                             <FaPhoneAlt className="text-blue-600 mt-1" />
                             <div>
                                 <p className="text-xs text-blue-600">Call Any Time</p>
-                                <p className="font-medium text-gray-900">+880 1335-494935</p>
+                                <p className="font-medium text-gray-900">+880 1797-458657</p>
                             </div>
                         </div>
                         <div className="flex items-start gap-3">
@@ -65,7 +65,7 @@ const Footer = () => {
                             <FaPaperPlane className="text-blue-600 mt-1" />
                             <div>
                                 <p className="text-xs text-blue-600">Say Hello</p>
-                                <p>sheikhtasmia25@gmail.com</p>
+                                <p>info@stechnest.com</p>
                             </div>
                         </div>
                     </div>

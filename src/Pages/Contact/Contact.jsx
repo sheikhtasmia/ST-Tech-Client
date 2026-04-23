@@ -47,8 +47,8 @@ const Contact = () => {
   ];
 
   const contactInfo = [
-    { icon: <FiMail className="w-5 h-5" />, text: "sheikhtasmia25@gmail.com" },
-    { icon: <FiPhone className="w-5 h-5" />, text: "+880 1335-494935" },
+    { icon: <FiMail className="w-5 h-5" />, text: "info@stechnest.com" },
+    { icon: <FiPhone className="w-5 h-5" />, text: "+880 1797-458657" },
     { icon: <FiMapPin className="w-5 h-5" />, text: "Mirpur, Dhaka, Bangladesh" }
   ];
 
@@ -68,7 +68,7 @@ const Contact = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">STechNova</span>
+            Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">STechNest</span>
           </motion.h2>
           <motion.p 
             className="text-lg text-gray-600 max-w-2xl mx-auto"
@@ -119,11 +119,11 @@ const Contact = () => {
               >
                 <div className="w-28 h-28 rounded-full  flex items-center justify-center shadow-md">
                   <span className="text-white text-2xl font-bold">
-                    <img className="w-[100px]" src="https://i.ibb.co.com/LdJDQ7kg/download-25.png" alt="" />
+                    <img className="w-[80px]" src="https://i.ibb.co.com/0pk75sHt/st-logo.png" alt="" />
                   </span>
                 </div>
               </motion.div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">STechNova</h3>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-2">STechNest</h3>
               <p className="text-gray-600 text-center">
                 Digital service providing agency based in Dhaka, Bangladesh
               </p>

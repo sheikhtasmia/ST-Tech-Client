@@ -262,8 +262,8 @@ const Dashboard = () => {
                 >
                   {/* Your Logo Image */}
                   <img
-                    className='w-full h-full '
-                    src="https://i.ibb.co.com/LdJDQ7kg/download-25.png"
+                    className='w-60px h-16 '
+                    src="https://i.ibb.co.com/0pk75sHt/st-logo.png"
                     alt="St-Tech Logo"
                   />
                 </motion.div>

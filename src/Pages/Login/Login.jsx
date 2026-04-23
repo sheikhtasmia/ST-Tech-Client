@@ -129,7 +129,7 @@ const Login = () => {
                     {/* Right Form */}
                     <div className="p-8 md:p-10 bg-white/60 backdrop-blur-2xl">
                         <div className="flex justify-center mb-4">
-                            <img className="w-[220px]" src="https://i.ibb.co/HDPgsNx3/download-13.png" alt="logo" />
+                            <img className="w-[220px]" src="https://i.ibb.co.com/0pk75sHt/st-logo.png" alt="logo" />
                         </div>
                         <p className="text-gray-500 text-sm text-center mb-5">Strategic communication starts here.</p>
 

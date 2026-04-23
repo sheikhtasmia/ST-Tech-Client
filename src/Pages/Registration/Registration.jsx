@@ -77,7 +77,7 @@ const Registration = () => {
           <div className="flex justify-center mb-6">
             <img
               className="w-52"
-              src="https://i.ibb.co/HDPgsNx3/download-13.png"
+              src="https://i.ibb.co.com/0pk75sHt/st-logo.png"
               alt="Logo"
             />
           </div>

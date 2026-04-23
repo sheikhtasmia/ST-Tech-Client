@@ -51,7 +51,7 @@ const Navbar = () => {
             <div className="max-w-full mx-auto px-4">
                 <div className="flex justify-between items-center h-16">
                     <NavLink to="/" className="flex-shrink-0">
-                        <img src="https://i.ibb.co.com/LdJDQ7kg/download-25.png" alt="Logo" className="w-[200px] max-sm:w-[140px]" />
+                        <img src="https://i.ibb.co.com/0pk75sHt/st-logo.png" alt="Logo" className="w-[60px] max-sm:w-[60px]" />
                     </NavLink>
 
                     <ul className="hidden lg:flex items-center gap-6 text-[15px] font-medium text-gray-700">
