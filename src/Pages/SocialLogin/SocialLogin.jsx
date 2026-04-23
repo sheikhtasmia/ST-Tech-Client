@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AuthContext } from '../../providers/AuthProvider';
+import { AuthContext } from '../../Providers/AuthProvider';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { fireConfetti } from '../utils/confetti';
 import { FcGoogle } from 'react-icons/fc';
