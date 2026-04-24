@@ -1,41 +1,8 @@
-functionsDirectory = "E:\\stechnova\\ST-Tech-Client\\netlify\\functions"
-functionsDirectoryOrigin = "config-v1"
-plugins = []
-headers = []
-
-[functions]
-
-[functions."*"]
-
 [build]
-publish = "E:\\stechnova\\ST-Tech-Client\\dist"
-publishOrigin = "config"
-commandOrigin = "config"
-command = "npm run build"
-functions = "E:\\stechnova\\ST-Tech-Client\\netlify\\functions"
-
-[build.environment]
-
-[build.processing]
-
-[build.processing.css]
-
-[build.processing.html]
-
-[build.processing.images]
-
-[build.processing.js]
-
-[build.services]
+  command = "npm run build"
+  publish = "dist"
 
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200.0
-force = false
-
-[redirects.query]
-
-[redirects.conditions]
-
-[redirects.headers]
+  from = "/*"
+  to = "/index.html"
+  status = 200
